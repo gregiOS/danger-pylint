@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require_relative '../../lib/version'
+
+namespace :pylint do
+  desc 'Download and install pylint tool'
+  task :install do
+    next if ENV['DANGER_SKIP_PYLINT_INSTALL'] == 'YES'
+
+    puts "Downloading pylint"
+    sh "pip install pylint"
+  end
+end
+
+task default: 'swiftlint:install'

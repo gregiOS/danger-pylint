@@ -1,23 +1,21 @@
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "danger/pylint/version"
+require "version"
 
 Gem::Specification.new do |spec|
   spec.name          = "danger-pylint"
-  spec.version       = Danger::Pylint::VERSION
+  spec.version       = DangerPylint::VERSION
   spec.authors       = ["Grzegorz Przybyła"]
   spec.email         = ["grzegorz.przybyla@icloud.com"]
 
   spec.summary       = %q{Danger wrapper for pylint linter.}
   spec.description   = %q{Danger wrapper for pylint linter.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/gregiOS/danger-pylint/"
   spec.license       = "MIT"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/gregiOS/danger-pylint/"
+  spec.metadata["changelog_uri"] = "https://github.com/gregiOS/danger-pylint/"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

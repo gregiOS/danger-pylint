@@ -6,17 +6,15 @@ class Pylint
 
     # Run pylint with arguments
    def run(files, options = {})
-    puts "CMD:"
 
     options = dict_to_string(default_options.merge(options))
 
     files = files.join(' ')
     cmd = "#{pylint_path} #{files} #{options}"
-    puts cmd
 
-    result = `#{cmd}`
-    puts result
+    puts "#{cmd}"
 
+    `#{cmd}`
    end
 
     def default_pylint_path
@@ -42,6 +40,3 @@ class Pylint
     end
 
 end
-
-pylint = Pylint.new
-pylint.run(['/Users/grzegorz/Developer/danger-pylint/example/foo.py'], {'rcfile': '/Users/grzegorz/Developer/danger-pylint/example/.pylintrc'})

@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["grzegorz.przybyla@icloud.com"]
 
   spec.summary       = %q{Danger wrapper for pylint linter.}
-  spec.description   = %q{Danger wrapper for pylint linter.}
+  spec.description   = %q{Exclusive danger wrapper for pylint linter.}
   spec.homepage      = "https://github.com/gregiOS/danger-pylint/"
   spec.license       = "MIT"
 

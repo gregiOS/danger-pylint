@@ -6,6 +6,7 @@ gem 'danger'
 
 group :development do
   gem 'bacon'
+  gem 'pry'
   gem 'mocha'
   gem 'mocha-on-bacon'
   gem 'prettybacon'

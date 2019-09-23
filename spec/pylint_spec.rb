@@ -35,4 +35,14 @@ describe Pylint do
     pylint.run(["42.py"])
   end
 
+  it 'runs pylint with rcfile' do
+    expect(pylint).to receive(:`).with(including(Dir.pwd + '/.pylintrc'))
+    pylint.run(["42.py"], '.pylintrc')
+  end
+
+  it 'runs pylint with rcfile' do
+    expect(pylint).to receive(:`).with(including(Dir.pwd + '/.pylintrc'))
+    pylint.run(["42.py"], Dir.pwd + '/.pylintrc')
+  end
+
 end

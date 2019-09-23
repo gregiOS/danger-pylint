@@ -1,16 +1,14 @@
 
-module DangerPylint
-  module MessageUtil
-    TABLE_HEADER = '|Severity|File|Message|'.freeze
+module Danger
+  module IssueUtil
+    TABLE_HEADER = '|Severity|File|Validation-id|Message|'.freeze
     COLUMN_SEPARATOR = '|'.freeze
     TABLE_SEPARATOR = "#{COLUMN_SEPARATOR}---#{COLUMN_SEPARATOR}---#{COLUMN_SEPARATOR}---#{COLUMN_SEPARATOR}".freeze
     LINE_SEPARATOR = "\n".freeze
 
     module_function
-
     # Generate a markdown text message listing all issues as table.
     #
-    # @param name [String] The name of the report to be printed.
     # @param issues [Array<Issue>] List of parsed issues.
     # @return [String] String in danger markdown format.
     def markdown(issues)
@@ -31,6 +29,7 @@ module DangerPylint
     end
 
     def issues(issues)
+      return '' unless issues
       result = ''
       issues.each do |issue|
         result << COLUMN_SEPARATOR.dup

@@ -3,7 +3,10 @@ require 'find'
 require 'yaml'
 require 'shellwords'
 require_relative '../ext/pylint/pylint'
-require_relative 'models/Issue'
+require_relative 'models/issue'
+require_relative 'utils/issue_util'
+
+# include Issue
 
 module Danger
   class DangerPylint < Plugin
@@ -36,7 +39,7 @@ module Danger
     # It can still be overridden by setting the value when using #report.
     #
     # @return [Bool] Fail on high issues.
-    attr_accessor :fail_error
+    attr_accessor :fail_on_error
 
     ERROR_PYLINT_NOT_INSTALLED = 'PyLint not installed.'.freeze
     ERROR_HIGH_SEVERITY = '%s has high severity errors.'.freeze
@@ -46,7 +49,7 @@ module Danger
       run_pylint
       filter_issues
       comment
-      fail_on_error
+      fail_if_error
     end
 
     def validate
@@ -56,9 +59,13 @@ module Danger
     def run_pylint
       files = Dir["#{Dir.pwd}/**/*.py"]
       log("Running pylint for files: #{files}")
-      result = pylint.run(files, @rcfile, options)
-      @issues = JSON.parse(result).flatten.map { issue | Issue(issue) } unless !result
-      log("Found following issuese #{@issues}")
+      result = pylint.run(files, @rcfile)
+      if result
+        @issues = JSON.parse(result).flatten.map { |issue| Danger::Issue.new(issue) }
+      else
+        @issues = []
+      end
+      log("Found following issues #{@issues}")
     end
 
     def filter_issues
@@ -68,27 +75,26 @@ module Danger
       @issues.select! do |issue|
         git_files.include?(issue.file_name)
       end
+      log("Issues found after filtering: #{@issues}")
     end
 
     def comment
-      return if @issues.empty?
-      @inline ? inline_comment : markdown_issues
+      inline ? inline_comment : markdown_issues
     end
 
     def inline_comment
-      return unless @issues.empty?
       @issues.each do |issue|
         send(issue.severity, issue.message, file: issue.file_name, line: issue.line)
-        end
+      end
     end
 
-    def markdown_comment
-      text = MessageUtil.markdown(@issues)
+    def markdown_issues
+      text = IssueUtil.markdown(@issues)
       markdown(text)
     end
 
-    def fail_on_error
-      fail(format(ERROR_HIGH_SEVERITY, name)) if @fail_error && high_issues?
+    def fail_if_error
+      fail(format(ERROR_HIGH_SEVERITY, name)) if fail_on_error && high_issues?
     end
 
     def high_issues?
@@ -104,25 +110,10 @@ module Danger
     end
 
     def log(text)
-      puts(text) unless !@verbose
+      if :verbose
+        puts(text)
+        puts
+      end
     end
   end
 end
-
-# Issues found: [{"type"=>"fatal", "module"=>"danger-pylint", "obj"=>"", "line"=>1, "column"=>0, "path"=>"__init__.py",
-# "symbol"=>"parse-error",
-# "message"=>"error while code parsing: Unable to load file /Users/grzegorz/Developer/danger-pylint/__init__.py:\n[Errno 2]
-# No such file or directory: '/Users/grzegorz/Developer/danger-pylint/__init__.py'",
-# "message-id"=>"F0010"}]
-#
-#  {
-#         "type": "warning",
-#         "module": "foo",
-#         "obj": "",
-#         "line": 6,
-#         "column": 0,
-#         "path": "example/foo.py",
-#         "symbol": "pointless-statement",
-#         "message": "Statement seems to have no effect",
-#         "message-id": "W0104"
-#     },

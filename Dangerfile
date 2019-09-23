@@ -8,4 +8,7 @@ warn("PR is classed as Work in Progress") if github.pr_title.include? "[WIP]"
 warn("Big PR, try to keep changes smaller if you can") if git.lines_of_code > 500
 
 pylint.rcfile = 'example/.pylintrc'
-pylint.lint_files
+pylint.inline = true
+pylint.filter = true
+pylint.fail_on_error = true
+pylint.lint

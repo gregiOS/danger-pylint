@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# require File.expand_path('../spec_helper', __FILE__)
 require_relative '../ext/pylint/pylint'
 
 describe Pylint do

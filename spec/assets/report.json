@@ -1,0 +1,35 @@
+[
+  {
+    "type": "warning",
+    "module": "foo",
+    "obj": "",
+    "line": 2,
+    "column": 0,
+    "path": "example/foo.py",
+    "symbol": "bad-indentation",
+    "message": "Bad indentation. Found 2 spaces, expected 4",
+    "message-id": "W0311"
+  },
+  {
+    "type": "warning",
+    "module": "foo",
+    "obj": "",
+    "line": 3,
+    "column": 0,
+    "path": "example/foo.py",
+    "symbol": "bad-indentation",
+    "message": "Bad indentation. Found 3 spaces, expected 8",
+    "message-id": "W0311"
+  },
+  {
+    "type": "convention",
+    "module": "foo",
+    "obj": "",
+    "line": 8,
+    "column": 0,
+    "path": "example/foo.py",
+    "symbol": "missing-final-newline",
+    "message": "Final newline missing",
+    "message-id": "C0304"
+  }
+]

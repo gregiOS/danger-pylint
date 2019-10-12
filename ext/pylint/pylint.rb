@@ -6,11 +6,11 @@ class Pylint
    end
 
     # Run pylint with arguments
-   def run(files, rcfile = nil, options = {})
+   def run(files = [], rcfile = nil, options = {})
 
     options = dict_to_string(default_options(rcfile).merge(options))
 
-    files = files.join(' ')
+    files = files.empty? ? "" : files.join(' ')
     cmd = "#{pylint_path} #{files} #{options}"
 
     puts "#{cmd}" unless !@verbose

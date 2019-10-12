@@ -44,4 +44,9 @@ describe Pylint do
     pylint.run(["42.py"], Dir.pwd + '/.pylintrc')
   end
 
+  it 'runs pylint without files' do
+    expect(pylint).to receive(:`).with(including('lint'))
+    pylint.run()
+  end
+
 end

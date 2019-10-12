@@ -8,6 +8,10 @@ module Danger
       "#{@issue['type'].to_s.capitalize}|#{@issue['message-id']}|#{@issue['message']}"
     end
 
+    def path
+      @issue['path']
+    end
+
     def file_name
       @issue['path'].split('/').last
     end

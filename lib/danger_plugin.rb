@@ -43,6 +43,8 @@ module Danger
 
     ERROR_PYLINT_NOT_INSTALLED = 'PyLint not installed.'.freeze
     ERROR_HIGH_SEVERITY = '%s has high severity errors.'.freeze
+    DEFAULT_FILTER = true
+    DEFAULT_INLINE = true
 
     def lint
       validate
@@ -57,7 +59,7 @@ module Danger
     end
 
     def run_pylint
-      files = Dir["#{Dir.pwd}/**/*.py"]
+      files = Dir.glob("#{Dir.pwd}/**/*.py")
       log("Running pylint for files: #{files}")
       result = pylint.run(files, @rcfile)
       if result
@@ -72,8 +74,9 @@ module Danger
       return unless filter
       log("Filtering issues")
       git_files = git.modified_files + git.added_files
+      print(git_files)
       @issues.select! do |issue|
-        git_files.include?(issue.file_name)
+        git_files.include?(issue.path)
       end
       log("Issues found after filtering: #{@issues}")
     end
@@ -83,12 +86,14 @@ module Danger
     end
 
     def inline_comment
+      log("Create inline comments")
       @issues.each do |issue|
         send(issue.severity, issue.message, file: issue.file_name, line: issue.line)
       end
     end
 
     def markdown_issues
+      log("Create markdown report")
       text = IssueUtil.markdown(@issues)
       markdown(text)
     end
@@ -106,7 +111,7 @@ module Danger
     end
 
     def pylint
-      Pylint.new(binary_path)
+      @pylint ||= Pylint.new(binary_path)
     end
 
     def log(text)
@@ -114,6 +119,14 @@ module Danger
         puts(text)
         puts
       end
+    end
+
+    def inline
+      @inline || DEFAULT_INLINE
+    end
+
+    def filter
+      @filter || DEFAULT_FILTER
     end
   end
 end

@@ -48,7 +48,7 @@ module Danger
           @pylint.lint
         end
 
-        context "in-line comments" do
+        context "inline" do
 
           it 'filters lint issues to return issues in added files' do
             allow(@pylint.git).to receive(:added_files).and_return(["example/foo.py"])
@@ -89,6 +89,28 @@ module Danger
             expect(status[:messages]).to be_empty
           end
 
+        end
+
+        context "markdown" do
+
+          before do
+            @pylint.inline = false
+            @pylint.filter = false
+          end
+
+          it "Should return comments in markdown" do
+            expect(@pylint.pylint).to receive(:run).and_return(ISSUES_STRING)
+
+            @pylint.lint
+
+            status = @pylint.status_report
+
+            expect(status[:warnings]).to be_empty
+            expect(status[:errors]).to be_empty
+            expect(status[:messages]).to be_empty
+            expect(status[:markdowns].count).to eql(1)
+            expect(status[:markdowns][0].message).to eql("# pylint\n|Severity|File|Validation-id|Message|\n|---|---|---|\n|Warn|foo.py:2|Warning|W0311|Bad indentation. Found 2 spaces, expected 4|\n|Warn|foo.py:3|Warning|W0311|Bad indentation. Found 3 spaces, expected 8|\n|Fail|foo.py:8|Convention|C0304|Final newline missing|\n")
+          end
 
         end
       end

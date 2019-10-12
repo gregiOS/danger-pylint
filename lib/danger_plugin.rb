@@ -45,7 +45,11 @@ module Danger
     ERROR_HIGH_SEVERITY = '%s has high severity errors.'.freeze
     DEFAULT_FILTER = true
     DEFAULT_INLINE = true
-
+    def initialize(dangerfile)
+      super(dangerfile)
+      self.inline ||= DEFAULT_INLINE
+      self.filter ||= DEFAULT_FILTER
+    end
     def lint
       validate
       run_pylint
@@ -119,14 +123,6 @@ module Danger
         puts(text)
         puts
       end
-    end
-
-    def inline
-      @inline || DEFAULT_INLINE
-    end
-
-    def filter
-      @filter || DEFAULT_FILTER
     end
   end
 end
